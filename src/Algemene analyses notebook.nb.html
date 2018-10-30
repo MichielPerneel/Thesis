@@ -180,55 +180,11 @@ $(document).ready(function () {
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
-<pre class="r"><code>library(tidyverse)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSCRdGlkeXZlcnNlkiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDMuNC40XHUwMDFiWzM3bS0tIFx1MDAxYlsxbUF0dGFjaGluZyBwYWNrYWdlc1x1MDAxYlsyMm0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZSAxLjIuMSAtLVx1MDAxYlszOW1cblx1MDAxYlszN21cdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bWdncGxvdDJcdTAwMWJbMzdtIDIuMi4xICAgICBcdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bXB1cnJyICBcdTAwMWJbMzdtIDAuMi40XG5cdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bXRpYmJsZSBcdTAwMWJbMzdtIDEuNC4yICAgICBcdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bWRwbHlyICBcdTAwMWJbMzdtIDAuNy40XG5cdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bXRpZHlyICBcdTAwMWJbMzdtIDAuOC4wICAgICBcdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bXN0cmluZ3JcdTAwMWJbMzdtIDEuMy4wXG5cdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bXJlYWRyICBcdTAwMWJbMzdtIDEuMS4xICAgICBcdTAwMWJbMzJtdlx1MDAxYlszN20gXHUwMDFiWzM0bWZvcmNhdHNcdTAwMWJbMzdtIDAuMy4wXHUwMDFiWzM5bVxucGFja2FnZSCRZ2dwbG90MpIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNHBhY2thZ2UgkXRpYmJsZZIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNHBhY2thZ2UgkXRpZHlykiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDMuNC40cGFja2FnZSCRcmVhZHKSIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy40LjRwYWNrYWdlIJFwdXJycpIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNHBhY2thZ2UgkWRwbHlykiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDMuNC4zcGFja2FnZSCRc3RyaW5ncpIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNHBhY2thZ2UgkWZvcmNhdHOSIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy40LjRcdTAwMWJbMzdtLS0gXHUwMDFiWzFtQ29uZmxpY3RzXHUwMDFiWzIybSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gdGlkeXZlcnNlX2NvbmZsaWN0cygpIC0tXG5cdTAwMWJbMzFteFx1MDAxYlszN20gXHUwMDFiWzM0bWRwbHlyXHUwMDFiWzM3bTo6XHUwMDFiWzMybWZpbHRlcigpXHUwMDFiWzM3bSBtYXNrcyBcdTAwMWJbMzRtc3RhdHNcdTAwMWJbMzdtOjpmaWx0ZXIoKVxuXHUwMDFiWzMxbXhcdTAwMWJbMzdtIFx1MDAxYlszNG1kcGx5clx1MDAxYlszN206Olx1MDAxYlszMm1sYWcoKVx1MDAxYlszN20gICAgbWFza3MgXHUwMDFiWzM0bXN0YXRzXHUwMDFiWzM3bTo6bGFnKClcdTAwMWJbMzltXG4ifQ== -->
-<pre><code>package &lt;U+393C&gt;&lt;U+3E31&gt;tidyverse&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4[37m-- [1mAttaching packages[22m --------------------------------------- tidyverse 1.2.1 --[39m
-[37m[32mv[37m [34mggplot2[37m 2.2.1     [32mv[37m [34mpurrr  [37m 0.2.4
-[32mv[37m [34mtibble [37m 1.4.2     [32mv[37m [34mdplyr  [37m 0.7.4
-[32mv[37m [34mtidyr  [37m 0.8.0     [32mv[37m [34mstringr[37m 1.3.0
-[32mv[37m [34mreadr  [37m 1.1.1     [32mv[37m [34mforcats[37m 0.3.0[39m
-package &lt;U+393C&gt;&lt;U+3E31&gt;ggplot2&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;tibble&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;tidyr&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;readr&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;purrr&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;dplyr&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.3package &lt;U+393C&gt;&lt;U+3E31&gt;stringr&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4package &lt;U+393C&gt;&lt;U+3E31&gt;forcats&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4[37m-- [1mConflicts[22m ------------------------------------------ tidyverse_conflicts() --
-[31mx[37m [34mdplyr[37m::[32mfilter()[37m masks [34mstats[37m::filter()
-[31mx[37m [34mdplyr[37m::[32mlag()[37m    masks [34mstats[37m::lag()[39m</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkYXRhLnRhYmxlKVxuYGBgIn0= -->
-<pre class="r"><code>library(data.table)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSDjpLzjuLFkYXRhLnRhYmxl46S847iyIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy40LjRkYXRhLnRhYmxlIDEuMTAuNC4zXG4gIFRoZSBmYXN0ZXN0IHdheSB0byBsZWFybiAoYnkgZGF0YS50YWJsZSBhdXRob3JzKTogaHR0cHM6Ly93d3cuZGF0YWNhbXAuY29tL2NvdXJzZXMvZGF0YS1hbmFseXNpcy10aGUtZGF0YS10YWJsZS13YXlcbiAgRG9jdW1lbnRhdGlvbjogP2RhdGEudGFibGUsIGV4YW1wbGUoZGF0YS50YWJsZSkgYW5kIGJyb3dzZVZpZ25ldHRlcyhcImRhdGEudGFibGVcIilcbiAgUmVsZWFzZSBub3RlcywgdmlkZW9zIGFuZCBzbGlkZXM6IGh0dHA6Ly9yLWRhdGF0YWJsZS5jb21cblxuQXR0YWNoaW5nIHBhY2thZ2U6IOOkvOO4sWRhdGEudGFibGXjpLzjuLJcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDjpLzjuLFwYWNrYWdlOmRwbHly46S847iyOlxuXG4gICAgYmV0d2VlbiwgZmlyc3QsIGxhc3RcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g46S847ixcGFja2FnZTpwdXJycuOkvOO4sjpcblxuICAgIHRyYW5zcG9zZVxuIn0= -->
-<pre><code>package &lt;U+393C&gt;&lt;U+3E31&gt;data.table&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4data.table 1.10.4.3
-  The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way
-  Documentation: ?data.table, example(data.table) and browseVignettes(&quot;data.table&quot;)
-  Release notes, videos and slides: http://r-datatable.com
-
-Attaching package: &lt;U+393C&gt;&lt;U+3E31&gt;data.table&lt;U+393C&gt;&lt;U+3E32&gt;
-
-The following objects are masked from &lt;U+393C&gt;&lt;U+3E31&gt;package:dplyr&lt;U+393C&gt;&lt;U+3E32&gt;:
-
-    between, first, last
-
-The following object is masked from &lt;U+393C&gt;&lt;U+3E31&gt;package:purrr&lt;U+393C&gt;&lt;U+3E32&gt;:
-
-    transpose</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
-<pre class="r"><code>library(lubridate)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSDjpLzjuLFsdWJyaWRhdGXjpLzjuLIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNFxuQXR0YWNoaW5nIHBhY2thZ2U6IOOkvOO4sWx1YnJpZGF0ZeOkvOO4slxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOOkvOO4sXBhY2thZ2U6ZGF0YS50YWJsZeOkvOO4sjpcblxuICAgIGhvdXIsIGlzb3dlZWssIG1kYXksIG1pbnV0ZSwgbW9udGgsIHF1YXJ0ZXIsIHNlY29uZCwgd2RheSwgd2VlaywgeWRheSwgeWVhclxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDjpLzjuLFwYWNrYWdlOmJhc2XjpLzjuLI6XG5cbiAgICBkYXRlXG4ifQ== -->
-<pre><code>package &lt;U+393C&gt;&lt;U+3E31&gt;lubridate&lt;U+393C&gt;&lt;U+3E32&gt; was built under R version 3.4.4
-Attaching package: &lt;U+393C&gt;&lt;U+3E31&gt;lubridate&lt;U+393C&gt;&lt;U+3E32&gt;
-
-The following objects are masked from &lt;U+393C&gt;&lt;U+3E31&gt;package:data.table&lt;U+393C&gt;&lt;U+3E32&gt;:
-
-    hour, isoweek, mday, minute, month, quarter, second, wday, week, yday, year
-
-The following object is masked from &lt;U+393C&gt;&lt;U+3E31&gt;package:base&lt;U+393C&gt;&lt;U+3E32&gt;:
-
-    date</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxuYGBgIn0= -->
-<pre class="r"><code>library(ggplot2)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGRhdGEudGFibGUpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoZ2dwbG90MilcbmBgYCJ9 -->
+<pre class="r"><code>library(tidyverse)
+library(data.table)
+library(lubridate)
+library(ggplot2)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -236,13 +192,12 @@ The following object is masked from &lt;U+393C&gt;&lt;U+3E31&gt;package:base&lt;
 <p>Read data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmF3ZGF0YSA8LSByZWFkLmNzdihcImRhdGEvcmF3L0dsYXNzIGVlbCBzdG9jayBkZWVwZnJlZXplIDIwMTcuY3N2XCIsIGhlYWRlciA9IFRSVUUsIHNlcCA9IFwiO1wiKVxucmF3ZGF0YSA8LSBkYXRhLnRhYmxlKHJhd2RhdGEpXG5yYXdkYXRhIDwtIHJhd2RhdGFbLFR1YmUuTi46cmVtYXJrc11cbnJhd2RhdGEkRGF0ZSA8LSBkbXkocmF3ZGF0YSREYXRlKVxuYXR0YWNoKHJhd2RhdGEpXG5gYGAifQ== -->
-<pre class="r"><code>rawdata &lt;- read.csv(&quot;data/raw/Glass eel stock deepfreeze 2017.csv&quot;, header = TRUE, sep = &quot;;&quot;)
-rawdata &lt;- data.table(rawdata)
-rawdata &lt;- rawdata[,Tube.N.:remarks]
-rawdata$Date &lt;- dmy(rawdata$Date)
-attach(rawdata)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmF3ZGF0YSA8LSByZWFkLmNzdihcImRhdGEvcmF3L0dsYXNzIGVlbCBzdG9jayBkZWVwZnJlZXplIDIwMTcuY3N2XCIsIGhlYWRlciA9IFRSVUUsIHNlcCA9IFwiO1wiKVxuYGBgIn0= -->
+<pre class="r"><code>rawdata &lt;- read.csv(&quot;data/raw/Glass eel stock deepfreeze 2017.csv&quot;, header = TRUE, sep = &quot;;&quot;)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnZGF0YS9yYXcvR2xhc3MgZWVsIHN0b2NrIGRlZXBmcmVlemUgMjAxNy5jc3YnOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5RXJyb3IgaW4gZmlsZShmaWxlLCBcInJ0XCIpIDogY2Fubm90IG9wZW4gdGhlIGNvbm5lY3Rpb25cbiJ9 -->
+<pre><code>cannot open file 'data/raw/Glass eel stock deepfreeze 2017.csv': No such file or directoryError in file(file, &quot;rt&quot;) : cannot open the connection</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Check the catch location</p>
