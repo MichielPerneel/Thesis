@@ -1,0 +1,141 @@
+---
+title: "Data exploration Thesis"
+author: "Michiel"
+date: "25 januari 2019"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+
+setwd("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw")
+library(xlsx)
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(tibble)
+library(ggbiplot)
+maaginhoud <- as.tibble(read.xlsx("Maaginhoud.xlsx", sheetIndex = 1))
+data_inbo <- as.tibble(read.xlsx("Glass eel stock deepfreeze 2017.xlsx", sheetIndex = 1))
+head(maaginhoud)
+
+```
+
+# Plots
+
+
+```{r pressure, echo=FALSE}
+
+barplot1 <- ggplot(data_inbo, aes(Location)) +
+  geom_bar() +
+  ggtitle("Location of glass eel catch")
+barplot1
+
+barplot1b <- ggplot(data_inbo, aes(Catchment.method)) +
+  geom_bar() +
+  ggtitle("Catchment method")
+barplot1b
+
+barplot2 <- ggplot(data_inbo, aes(month(Date))) +
+  geom_bar() +
+  ggtitle("Month of glass eel catch")
+barplot2
+
+barplot3 <- ggplot(data_inbo, aes(week(Date))) +
+  geom_bar() +
+  ggtitle("Week of glass eel catch")
+barplot3
+
+plot4 <- ggplot(data_inbo, aes(week(Date), length..mm.)) +
+  geom_point() +
+  ggtitle("Length of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method)
+plot4
+
+plot5 <- ggplot(data_inbo, aes(week(Date), weight.mg.)) +
+  geom_point() + 
+  ggtitle("Weight of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method)
+plot5
+
+plot6 <- ggplot(data_inbo, aes(week(Date), fill = pigmentation.stage)) +
+  geom_bar() +
+  ggtitle("Pigmentation stage of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method)
+plot6
+
+plot7 <- ggplot(data_inbo, aes(week(Date), condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method)
+plot7
+
+```
+
+At which locality are most glass eel caught?
+
+VA_PG_LO_PA: Veurne Ambacht canal pumping station left bank eel ladder
+VA_PG_RO_PA: Veurne Ambacht canal pumping station right bank eel ladder
+VA_PG_LO_SU: Veurne Ambacht canal pumping station left bank substrates
+VA_PG_RO_SU: Veurne Ambacht canal pumping station right bank substrates
+VA_MI_LO_SU: Veurne Ambacht canal middle left bank substrates
+VA_MI_RO_SU: Veurne Ambacht canal middle right bank substrates
+VA_SC_LO_SU: Veurne Ambacht canal sluicecomplex Ganzepoot left bank substrates
+VA_SC_RO_SU:  Veurne Ambacht canal sluicecomplex Ganzepoot right bank substrates
+VA_PG_KR_NA: Veurne Ambacht canal pumpingstation liftnets night
+GA_SU: Ganzepoot substrates
+
+
+```{r}
+locations <- c("GA-SU", "PG-KR-NA", "SC-RO-SU", "SC-LO-SU","MI-RO-SU","MI-LO-SU", "PG-RO-SU", "PG-LO-SU", "PG-RO-PA", "PG-LO-PA")
+library(plyr)
+maaginhoud.locatie <- mapvalues(maaginhoud$Locatie, from = locations, to = c("Ganzepoot", "Pompstation kruisnetten", "Sluiscomplex", "Sluiscomplex", "Midden Veurne-Ambachtkanaal", "Midden Veurne-Ambachtkanaal", "Pompgemaal", "Pompgemaal", "Pompgemaal", "Pompgemaal"))
+maaginhoud$Locatie2 <- maaginhoud.locatie
+barplot1 <- ggplot(maaginhoud, aes(Locatie2)) +
+  geom_bar()
+barplot1
+```
+
+
+# PCA
+
+PCA as exploration of the stomach analysis data
+
+https://www.datacamp.com/community/tutorials/pca-analysis-r
+
+
+```{r}
+maaginhoud2 <- as.tibble(read.xlsx("Maaginhoud.xlsx", sheetIndex = 2))
+maaginhoud2.pca <- prcomp(na.omit(maaginhoud2[4:21]), center = TRUE, scale. = TRUE)
+str(maaginhoud2.pca)
+ggbiplot(maaginhoud2.pca)
+
+ggbiplot(maaginhoud2.pca, ellipse = TRUE, groups = na.omit(maaginhoud2$Locatie))
+
+
+```
+# Piecharts
+
+https://www.zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/
+
+
+```{r}
+
+colnames <- c("Microplastics.Contaminatie.vezels..katoen..", "Cladocera.sp.", "Annelida", "Polychaete", "Isopoda", "Diptera.sp.", "Chironomida.sp.", "Crustaceae.sp.", "Cycloida.sp.", "Unidentified.sp.", 'Amphipoda.sp.', 'Calanoida.sp.', "Copepoda.sp.", "Harpacticoid.Copepod", "Hexapode.sp....", "keverlarve", "Pennate.diatomee","Plantae.sp.")
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud2, aes_string(x="''", y = colnames[i], fill = "Methode")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud2, aes_string(x="''", y = colnames[i], fill = "Locatie_A")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+```
+
