@@ -1,0 +1,1929 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Data exploration Thesis},
+            pdfauthor={Michiel Perneel},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Data exploration Thesis}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Michiel Perneel}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{March 2019}
+
+
+\begin{document}
+\maketitle
+
+\section{Data setup}\label{data-setup}
+
+In this section, all the required libraries are read, and the data is
+uploaded in r.
+\url{https://bookdown.org/yihui/rmarkdown/output-formats.html}
+
+Now the data is loaded
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw"}\NormalTok{)}
+\NormalTok{maaginhoud <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(}\KeywordTok{read.csv2}\NormalTok{(}\StringTok{"C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud.csv"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{";"}\NormalTok{, }\DataTypeTok{dec =} \StringTok{","}\NormalTok{)) }\CommentTok{# leest de ruwe dataset (count van maaginhoud)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(maaginhoud)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 77
+##      nr Potje.staart.ve~ Potje.Maaginhoud datum Locatie Gewicht.Glasaal
+##   <int> <fct>                       <int> <fct> <fct>             <dbl>
+## 1    60 A                               1 24/0~ PG-KR             0.211
+## 2   278 A                               1 12/0~ MI-RO-~           0.294
+## 3   215 A                               1 5/05~ MI-RO-~           0.211
+## 4   183 A                               1 28/0~ PG-LO-~           0.147
+## 5   219 A                               1 12/0~ PG-RO-~           0.227
+## 6   242 A                               1 15/0~ PG-LO-~           0.2  
+## # ... with 71 more variables: Gewicht.maag.darmstelsel <dbl>,
+## #   Opmerkingen <fct>, Microplastics.Contaminatie.vezels..katoen.. <int>,
+## #   X <lgl>, Cladocera.sp. <int>, X.1 <lgl>, Annelida <int>, X.2 <lgl>,
+## #   Polychaete <int>, X.3 <lgl>, Isopoda <int>, X.4 <lgl>,
+## #   Diptera.sp. <int>, X.5 <lgl>, Chironomide.thummi.plummosus <int>,
+## #   X.6 <lgl>, Crustaceae.sp. <int>, X.7 <lgl>, Cycloida.sp. <int>,
+## #   X.8 <lgl>, Invertebrata..larve..sp. <int>, X.9 <lgl>,
+## #   Daphnidae.sp...ingekapseld. <int>, X.10 <lgl>,
+## #   Cladocera.sp...Chydorus.sphaericus. <int>, X.11 <lgl>,
+## #   Amphipoda.sp. <int>, X.12 <lgl>,
+## #   Calanoide.Copepode..Pseudocalanus.elongatus. <int>, X.13 <lgl>,
+## #   Gammarus <int>, X.14 <lgl>, Calanoide.copepode <int>, X.15 <lgl>,
+## #   unidentifiable.eggs <int>, X.16 <lgl>, Copepoda.sp. <int>, X.17 <lgl>,
+## #   Copepoda..Oithona.similis..male. <int>, X.18 <lgl>,
+## #   Harpacticoid.Copepod <int>, X.19 <lgl>, Pleuroxus.sp. <int>,
+## #   X.20 <lgl>, Chydorus.sp. <int>, X.21 <lgl>,
+## #   Detritus.plantenafval <int>, X.22 <lgl>, Plantae.sp. <int>,
+## #   X.23 <lgl>, Pennate.diatomee <int>, X.24 <lgl>,
+## #   Detritus.met.schimmelfilamenten <int>, X.25 <lgl>,
+## #   Invertebrate.sp. <int>, X.26 <lgl>, Hexapode.sp.... <int>, X.27 <lgl>,
+## #   keverlarve <int>, X.28 <lgl>, Chironomide..Non.thummi.plumosus. <int>,
+## #   X.29 <lgl>, Nereis.sp. <int>, X.30 <lgl>,
+## #   Amphipode..Atylus.sp.. <int>, X.31 <lgl>, Chironomide.sp. <int>,
+## #   X.32 <lgl>, Simulium.sp. <int>, X.33 <lgl>, X.34 <lgl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud2 <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(}\KeywordTok{read.csv2}\NormalTok{(}\StringTok{"C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud2.csv"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{";"}\NormalTok{, }\DataTypeTok{dec =} \StringTok{","}\NormalTok{))}
+\KeywordTok{head}\NormalTok{(maaginhoud2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 24
+##      nr datum Locatie Locatie_A Locatie_Oever Methode Microplastics.C~
+##   <int> <fct> <fct>   <fct>     <fct>         <fct>              <int>
+## 1    60 24/0~ PG-KR   Pompgema~ midden        Kruisn~                1
+## 2   278 12/0~ MI-RO-~ Midden VA RO            Substr~                0
+## 3   215 5/05~ MI-RO-~ Midden VA RO            Substr~                0
+## 4   183 28/0~ PG-LO-~ Pompgema~ LO            Substr~                1
+## 5   219 12/0~ PG-RO-~ Pompgema~ RO            Paling~                0
+## 6   242 15/0~ PG-LO-~ Pompgema~ LO            Paling~                0
+## # ... with 17 more variables: Cladocera.sp. <int>, Annelida <int>,
+## #   Polychaete <int>, Isopoda <int>, Diptera.sp. <int>,
+## #   Chironomida.sp. <int>, Crustaceae.sp. <int>, Cycloida.sp. <int>,
+## #   Unidentified.sp. <int>, Amphipoda.sp. <int>, Calanoida.sp. <int>,
+## #   Copepoda.sp. <int>, Harpacticoid.Copepod <int>, Hexapode.sp.... <int>,
+## #   keverlarve <int>, Pennate.diatomee <int>, Plantae.sp. <int>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_inbo <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(}\KeywordTok{read.csv2}\NormalTok{(}\StringTok{"C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Glass eel stock deepfreeze 2017.csv"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{";"}\NormalTok{, }\DataTypeTok{dec =} \StringTok{","}\NormalTok{)) }\CommentTok{# leest de data van het inbo genoteerd bij de glasaalstaalname}
+\KeywordTok{head}\NormalTok{(data_inbo)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 22
+##      nr Date  Location Catchment.method length..mm. weight.mg.
+##   <int> <fct> <fct>    <fct>                  <int>      <int>
+## 1     1 10/0~ VA_PG_R~ Palinggoot                77        347
+## 2     2 10/0~ VA_PG_R~ Palinggoot                74        315
+## 3     3 10/0~ VA_PG_R~ Palinggoot                70        265
+## 4     4 10/0~ VA_PG_R~ Palinggoot                68        266
+## 5     5 10/0~ VA_PG_R~ Palinggoot                76        356
+## 6     6 11/0~ VA_PG_L~ Palinggoot                66        313
+## # ... with 16 more variables: pigmentation.stage <fct>,
+## #   condition.factor <dbl>, Food.visible <fct>, remarks <fct>, X <lgl>,
+## #   X.1 <fct>, X.2 <lgl>, X.3 <lgl>, X.4 <lgl>, X.5 <fct>, X.6 <lgl>,
+## #   X.7 <lgl>, X.8 <lgl>, X.9 <lgl>, X.10 <lgl>, X.11 <lgl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_inbo}\OperatorTok{$}\NormalTok{Date <-}\StringTok{ }\KeywordTok{strptime}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(data_inbo}\OperatorTok{$}\NormalTok{Date), }\StringTok{"%d/%m/%Y"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+And then we can start exploring!
+
+\section{Visual Exploration}\label{visual-exploration}
+
+\subsection{Environmental Data from
+INBO}\label{environmental-data-from-inbo}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-1.pdf}
+
+\begin{verbatim}
+## List of 60
+##  $ line                 :List of 6
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ lineend      : chr "butt"
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ rect                 :List of 5
+##   ..$ fill         : chr "white"
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ text                 :List of 11
+##   ..$ family       : chr ""
+##   ..$ face         : chr "plain"
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 11
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : num 0
+##   ..$ lineheight   : num 0.9
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.x         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 2.75 0 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.x.top     :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 2.75 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.y         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : num 90
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 2.75 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.y.right   :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 0 2.75
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text            :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr "grey30"
+##   ..$ size         :Class 'rel'  num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.x          :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 2.2 0 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.x.top      :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 2.2 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.y          :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 1
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 2.2 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.y.right    :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 0 2.2
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.ticks           :List of 6
+##   ..$ colour       : chr "grey20"
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ axis.ticks.length    :Class 'unit'  atomic [1:1] 2.75
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ axis.line            :List of 6
+##   ..$ colour       : chr "black"
+##   ..$ size         :Class 'rel'  num 1
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ axis.line.x          : NULL
+##  $ axis.line.y          : NULL
+##  $ legend.background    :List of 5
+##   ..$ fill         : NULL
+##   ..$ colour       : logi NA
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ legend.margin        :Classes 'margin', 'unit'  atomic [1:4] 5.5 5.5 5.5 5.5
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ legend.spacing       :Class 'unit'  atomic [1:1] 11
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ legend.spacing.x     : NULL
+##  $ legend.spacing.y     : NULL
+##  $ legend.key           : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ legend.key.size      :Class 'unit'  atomic [1:1] 1.2
+##   .. ..- attr(*, "valid.unit")= int 3
+##   .. ..- attr(*, "unit")= chr "lines"
+##  $ legend.key.height    : NULL
+##  $ legend.key.width     : NULL
+##  $ legend.text          :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         :Class 'rel'  num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.text.align    : NULL
+##  $ legend.title         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.title.align   : NULL
+##  $ legend.position      : chr "right"
+##  $ legend.direction     : NULL
+##  $ legend.justification : chr "center"
+##  $ legend.box           : NULL
+##  $ legend.box.margin    :Classes 'margin', 'unit'  atomic [1:4] 0 0 0 0
+##   .. ..- attr(*, "valid.unit")= int 1
+##   .. ..- attr(*, "unit")= chr "cm"
+##  $ legend.box.background: list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ legend.box.spacing   :Class 'unit'  atomic [1:1] 11
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ panel.background     :List of 5
+##   ..$ fill         : chr "white"
+##   ..$ colour       : logi NA
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ panel.border         : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ panel.spacing        :Class 'unit'  atomic [1:1] 5.5
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ panel.spacing.x      : NULL
+##  $ panel.spacing.y      : NULL
+##  $ panel.grid           :List of 6
+##   ..$ colour       : chr "grey92"
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ panel.grid.minor     : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ panel.ontop          : logi FALSE
+##  $ plot.background      :List of 5
+##   ..$ fill         : NULL
+##   ..$ colour       : chr "white"
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ plot.title           :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         :Class 'rel'  num 1.2
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 5.5 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.subtitle        :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 0 0 5.5 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.caption         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         :Class 'rel'  num 0.8
+##   ..$ hjust        : num 1
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 5.5 0 0 0
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.tag             :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         :Class 'rel'  num 1.2
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.tag.position    : chr "topleft"
+##  $ plot.margin          :Classes 'margin', 'unit'  atomic [1:4] 5.5 5.5 5.5 5.5
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ strip.background     :List of 5
+##   ..$ fill         : chr "white"
+##   ..$ colour       : chr "black"
+##   ..$ size         :Class 'rel'  num 2
+##   ..$ linetype     : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ strip.placement      : chr "inside"
+##  $ strip.text           :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr "grey10"
+##   ..$ size         :Class 'rel'  num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       :Classes 'margin', 'unit'  atomic [1:4] 4.4 4.4 4.4 4.4
+##   .. .. ..- attr(*, "valid.unit")= int 8
+##   .. .. ..- attr(*, "unit")= chr "pt"
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ strip.text.x         : NULL
+##  $ strip.text.y         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ strip.switch.pad.grid:Class 'unit'  atomic [1:1] 2.75
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ strip.switch.pad.wrap:Class 'unit'  atomic [1:1] 2.75
+##   .. ..- attr(*, "valid.unit")= int 8
+##   .. ..- attr(*, "unit")= chr "pt"
+##  $ panel.grid.major     : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  - attr(*, "class")= chr [1:2] "theme" "gg"
+##  - attr(*, "complete")= logi TRUE
+##  - attr(*, "validate")= logi TRUE
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-2.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-3.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-4.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-5.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-6.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-7.pdf}
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/pressure-8.pdf}
+
+\subsection{Sampling location}\label{sampling-location}
+
+TO DO: map met locaties aangeduid op satellietafbeelding
+
+VA\_PG\_LO\_PA: Veurne Ambacht canal pumping station left bank eel
+ladder VA\_PG\_RO\_PA: Veurne Ambacht canal pumping station right bank
+eel ladder VA\_PG\_LO\_SU: Veurne Ambacht canal pumping station left
+bank substrates VA\_PG\_RO\_SU: Veurne Ambacht canal pumping station
+right bank substrates VA\_MI\_LO\_SU: Veurne Ambacht canal middle left
+bank substrates VA\_MI\_RO\_SU: Veurne Ambacht canal middle right bank
+substrates VA\_SC\_LO\_SU: Veurne Ambacht canal sluicecomplex Ganzepoot
+left bank substrates VA\_SC\_RO\_SU: Veurne Ambacht canal sluicecomplex
+Ganzepoot right bank substrates VA\_PG\_KR\_NA: Veurne Ambacht canal
+pumpingstation liftnets night GA\_SU: Ganzepoot substrates
+
+\subsection{Piecharts}\label{piecharts}
+
+\url{https://www.zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{colnames <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Microplastics.Contaminatie.vezels..katoen.."}\NormalTok{, }\StringTok{"Cladocera.sp."}\NormalTok{, }\StringTok{"Annelida"}\NormalTok{, }\StringTok{"Polychaete"}\NormalTok{, }\StringTok{"Isopoda"}\NormalTok{, }\StringTok{"Diptera.sp."}\NormalTok{, }\StringTok{"Chironomida.sp."}\NormalTok{, }\StringTok{"Crustaceae.sp."}\NormalTok{, }\StringTok{"Cycloida.sp."}\NormalTok{, }\StringTok{"Unidentified.sp."}\NormalTok{, }\StringTok{'Amphipoda.sp.'}\NormalTok{, }\StringTok{'Calanoida.sp.'}\NormalTok{, }\StringTok{"Copepoda.sp."}\NormalTok{, }\StringTok{"Harpacticoid.Copepod"}\NormalTok{, }\StringTok{"Hexapode.sp...."}\NormalTok{, }\StringTok{"keverlarve"}\NormalTok{, }\StringTok{"Pennate.diatomee"}\NormalTok{,}\StringTok{"Plantae.sp."}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud2, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\StringTok{"''"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"Methode"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{)}
+\NormalTok{  pie <-}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\KeywordTok{coord_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\DataTypeTok{start=} \DecValTok{0}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(pie)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-2.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-3.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-5.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-6.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-7.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-8.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-9.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-10.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-11.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-12.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-13.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-14.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-15.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-16.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-17.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-18.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud2, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\StringTok{"''"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"Locatie_A"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{)}
+\NormalTok{  pie <-}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\KeywordTok{coord_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\DataTypeTok{start=} \DecValTok{0}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(pie)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-19.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-20.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-21.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-22.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-23.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-24.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-25.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-26.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-27.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-28.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-29.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-30.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-31.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-32.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-33.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-34.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-35.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-2-36.pdf}
+
+But now, we want to constructs piecharts which are not absolute numbers,
+but relative numbers. For example, if a glass eel ate 1 polychaete out
+of the total of 50 found polychaetes, this results in a relative number
+on the pie chart of 2\%
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud2 <-}\StringTok{ }\KeywordTok{remove_empty}\NormalTok{(maaginhoud2, }\StringTok{'rows'}\NormalTok{)}
+\NormalTok{col_sum <-}\StringTok{ }\KeywordTok{colSums}\NormalTok{(maaginhoud2[}\DecValTok{7}\OperatorTok{:}\DecValTok{24}\NormalTok{], }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}
+
+\NormalTok{maaginhoud3 <-}\StringTok{ }\NormalTok{maaginhoud2[}\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{]}
+\NormalTok{new_column <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (count }\ControlFlowTok{in} \DecValTok{7}\OperatorTok{:}\KeywordTok{length}\NormalTok{(maaginhoud2)) \{}
+\NormalTok{  new_column <-}\StringTok{ }\NormalTok{(maaginhoud2[count] }\OperatorTok{/}\StringTok{ }\NormalTok{col_sum[count }\OperatorTok{-}\StringTok{ }\DecValTok{6}\NormalTok{])}
+\NormalTok{  maaginhoud3 <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(maaginhoud3, new_column)}
+\NormalTok{\}}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud3, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\StringTok{"''"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"Methode"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{)}
+\NormalTok{  pie <-}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\KeywordTok{coord_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\DataTypeTok{start=} \DecValTok{0}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(pie)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-2.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-3.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-4.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-5.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-6.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-7.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-8.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-9.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-10.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-11.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-12.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-13.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-14.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-15.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-16.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-17.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-18.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud3, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\StringTok{"''"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"Locatie_A"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{)}
+\NormalTok{  pie <-}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\KeywordTok{coord_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\DataTypeTok{start=} \DecValTok{0}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(pie)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-19.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-20.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-21.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-22.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-23.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-24.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-25.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-26.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-27.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-28.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-29.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-30.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-31.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-32.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-33.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-34.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-35.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-3-36.pdf}
+
+Now we want to compose relative piecharts divided according to
+pigmentation stage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_inbo_pigmentation <-}\StringTok{ }\NormalTok{data_inbo[,}\KeywordTok{c}\NormalTok{(}\StringTok{"nr"}\NormalTok{,}\StringTok{"pigmentation.stage"}\NormalTok{)]}
+\NormalTok{maaginhoud4 <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(maaginhoud2, data_inbo_pigmentation, }\DataTypeTok{by=}\StringTok{'nr'}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud4, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\StringTok{"''"}\NormalTok{, }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"pigmentation.stage"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{)}
+\NormalTok{  pie <-}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\KeywordTok{coord_polar}\NormalTok{(}\StringTok{"y"}\NormalTok{, }\DataTypeTok{start=} \DecValTok{0}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(pie)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-2.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-3.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-4.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-5.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-6.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-7.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-8.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-9.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-10.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-11.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-12.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-13.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-14.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-15.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-16.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-17.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-4-18.pdf}
+
+Now we want to compare what the relative percentage caught per method \&
+location is To do so, we need a transposed data table. This needs some
+more work
+
+\subsection{Bargraphs}\label{bargraphs}
+
+Hier wordt weergegeven welke organismen op welke tijd van het jaar in
+verschillende pigmentatiestadia van de glasaal teruggevonden werden.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(colnames)) \{}
+\NormalTok{  bp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud4, }\KeywordTok{aes_string}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(maaginhoud4}\OperatorTok{$}\NormalTok{datum)), }\DataTypeTok{y =}\NormalTok{ colnames[i], }\DataTypeTok{fill =} \StringTok{"pigmentation.stage"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{width =} \DecValTok{1}\NormalTok{, }\DataTypeTok{stat=}\StringTok{"identity"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Week of 2017"}\NormalTok{)}
+  \KeywordTok{print}\NormalTok{(bp)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-2.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-3.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-4.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-5.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-6.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-7.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-8.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-9.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-10.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-11.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-12.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-13.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-14.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-15.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-16.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-17.pdf}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing missing values (position_stack).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-6-18.pdf}
+
+\section{Environmental samples}\label{environmental-samples}
+
+Een ideetje om de Forage ratio te berekenen. Forage ratio:
+
+\[ \frac{percent~weight~of~food~item~i~in~stomach~of~glass~eel~w}{percent~weight~of~food~item~i~in~the~environment}~~~~ x ~~ 100  \]
+Hier bekijken we eens de dataset waarin het aantal individuen per liter
+werd bekeken in 2016, maar om de bovenstaande ratio te berekenen zou
+toch een set van het jaar 2017 nodig zijn. Is die er?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{environment2016_ind <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Individuals per liter 2016.csv"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{";"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{dec =} \StringTok{","}\NormalTok{))}
+
+\NormalTok{env_cyclo <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(Datum)), Cyclopoida)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Cyclopoida ind/L 2016"}\NormalTok{)}
+\NormalTok{env_cyclo}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{env_alona_a <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Datum), Alona.affinis)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Alona affinis ind/L 2016"}\NormalTok{)}
+\NormalTok{env_alona_a}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{env_alona_r <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Datum), Alona.rectangula)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Alona rectangula ind/L 2016"}\NormalTok{)}
+\NormalTok{env_alona_r}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{env_chydorus <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Datum), Chydorus.sphaericus)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Chydorus sphaericus ind/L 2016"}\NormalTok{)}
+\NormalTok{env_chydorus}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{env_daphnia <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Datum), Daphnia.galeata)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Daphnia galeata ind/L 2016"}\NormalTok{)}
+\NormalTok{env_daphnia }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{env_pleuroxus <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(environment2016_ind, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Datum), Pleuroxus.aduncus)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Pleuroxus aduncus ind/L 2016"}\NormalTok{)}
+\NormalTok{env_pleuroxus}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-7-6.pdf}
+
+\section{Indices}\label{indices}
+
+Here, we calculate some indices from the dataset and visually explore
+these.
+
+\subsection{Stomach content analysis
+indices}\label{stomach-content-analysis-indices}
+
+\subsubsection{Condition Factor}\label{condition-factor}
+
+First, the condition factor is analysed. Condition factor is already a
+variable in the dataset, calculated by the INBO.
+
+Vraag voor jeroen: hoe werd deze conditiefactor juist berekend?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_condfact_method <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(data_inbo, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Date), condition.factor)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Condition factor of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Catchment.method) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Conditiefactor"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Week van het jaar 2017"}\NormalTok{)}
+\NormalTok{plot_condfact_method}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_condfact_location <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(data_inbo, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(Date), condition.factor)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Condition factor of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Location)}
+\NormalTok{plot_condfact_location}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-8-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_condfact_pigm <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(data_inbo, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, condition.factor)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Condition factor of glass eel vs week of catchment"}\NormalTok{) }
+\NormalTok{plot_condfact_pigm}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-8-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Nu de conditiefactor duidelijker weergeven, maar nu enkel voor de al verwerkte glasalen}
+
+\NormalTok{nr_locatie_methode <-}\StringTok{ }\KeywordTok{select}\NormalTok{(maaginhoud2, nr, Locatie_A, Locatie_Oever, Methode)}
+\NormalTok{nr_pigmentation_condfact <-}\StringTok{ }\KeywordTok{select}\NormalTok{(data_inbo, nr, pigmentation.stage, condition.factor)}
+
+\NormalTok{maaginhoud6 <-}\StringTok{ }\KeywordTok{select}\NormalTok{(maaginhoud, nr, datum, Gewicht.Glasaal, Gewicht.maag.darmstelsel)}
+\NormalTok{maaginhoud6 <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(maaginhoud6, }\DataTypeTok{ratio_visceral_total =}\NormalTok{ Gewicht.maag.darmstelsel }\OperatorTok{/}\StringTok{ }\NormalTok{Gewicht.Glasaal)}
+\NormalTok{maaginhoud6_wo_outlier <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(maaginhoud6, ratio_visceral_total }\OperatorTok{<}\StringTok{ }\DecValTok{1}\NormalTok{) }\CommentTok{# reden: zie hieronder}
+\NormalTok{maaginhoud6_wo_outlier}\OperatorTok{$}\NormalTok{datum <-}\StringTok{ }\KeywordTok{strptime}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(maaginhoud6_wo_outlier}\OperatorTok{$}\NormalTok{datum), }\StringTok{"%d/%m/%Y"}\NormalTok{)}
+
+\NormalTok{maaginhoud7 <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(maaginhoud6_wo_outlier, nr_locatie_methode, }\DataTypeTok{by=}\StringTok{'nr'}\NormalTok{)}
+\NormalTok{maaginhoud7 <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(maaginhoud7, nr_pigmentation_condfact, }\DataTypeTok{by=}\StringTok{'nr'}\NormalTok{)}
+
+\NormalTok{plot_condfact_location_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), condition.factor)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Condition factor vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van het jaar 2017"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Conditiefactor"}\NormalTok{)}
+\NormalTok{plot_condfact_location_}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 3 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-8-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_condfact_method_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), condition.factor)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Condition factor vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Methode) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van het jaar 2017"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Conditiefactor"}\NormalTok{)}
+\NormalTok{plot_condfact_method_}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 3 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-8-5.pdf}
+\#\#\# Number method
+
+\[ \frac{amount~of~food~~item~i}{total~number~of~items~found~in~gut}~~~~ x ~~ 100  \]
+Vertelt dit niet wat hetzelfde als de piecharts? Onderstaande code werkt
+ook nog niet helemaal\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud_index1  <-}\StringTok{ }\NormalTok{maaginhoud2[}\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{]}
+\NormalTok{maaginhoud_temp <-}\StringTok{ }\NormalTok{maaginhoud2[}\DecValTok{7}\OperatorTok{:}\DecValTok{24}\NormalTok{]}
+\ControlFlowTok{for}\NormalTok{ (rw }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(maaginhoud_temp)) \{ }
+\NormalTok{    tmp <-}\StringTok{ }\NormalTok{maaginhoud_temp[rw,]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(maaginhoud_temp[rw,]) }
+    \ControlFlowTok{if}\NormalTok{ (tmp) \{}
+\NormalTok{          maaginhoud_index1 <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(maaginhoud_index1, tmp); }
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      maaginhoud_index1 <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(maaginhoud_index1, maaginhoud_temp[rw,])}
+\NormalTok{    \}}
+\NormalTok{\} }
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Ratio visceral organs/total body
+mass}\label{ratio-visceral-organstotal-body-mass}
+
+Second, we calculate the ratio of visceral organs on total body mass.Dit
+is een index voor de `fulness' van de glasaal.
+
+\[ \frac{weight~of~stomach-gut~system~of~glass~eel~w}{total~body~mass~of~glass~eel~w}~~~~ x ~~ 100  \]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_method <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud6, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), ratio_visceral_total)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+\NormalTok{plot_ratio_method  }\CommentTok{# Dikke outlier wegwerken}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 77 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_method <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud6_wo_outlier, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), ratio_visceral_total)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+\NormalTok{plot_ratio_method }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-10-2.pdf}
+
+According to previous plot, glass eel do tend to be more fed at the end
+of spring. This is true for all catchment methods \& locations. But is
+this really the case?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_location <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), ratio_visceral_total)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+\NormalTok{plot_ratio_location}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_method <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), ratio_visceral_total)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Methode) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+\NormalTok{plot_ratio_method}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_location2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(}\KeywordTok{as.Date}\NormalTok{(datum)), ratio_visceral_total)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs week of catchment"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_Oever) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+\NormalTok{plot_ratio_location2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_pigm_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, ratio_visceral_total, }\DataTypeTok{fill =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs pigmentation stage"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Pigmentatiestadium"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{3}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{))  }
+\NormalTok{plot_ratio_pigm_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_pigm_locatie <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, ratio_visceral_total, }\DataTypeTok{fill =}\NormalTok{ Locatie_A)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs pigmentation stage"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Pigmentatiestadium"}\NormalTok{)}
+\NormalTok{plot_ratio_pigm_locatie}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_pigm_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, ratio_visceral_total, }\DataTypeTok{fill =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{3}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs pigmentation stage"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Pigmentatiestadium"}\NormalTok{)}
+\NormalTok{plot_ratio_pigm_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_ratio_tijd_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(datum), ratio_visceral_total, }\DataTypeTok{fill =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Ratio of visceral organs on total body mass of glass eel vs time"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Ratio viscerale organen / Totale lichaamsgewicht glasaal"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+  \CommentTok{#facet_zoom( x = Locatie_A == "Pompgemaal")}
+\NormalTok{plot_ratio_tijd_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (stat_boxplot).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-11-7.pdf}
+
+And indeed, it is the case across methods and locations.However, data
+from the pompgemaal is probably most reliable, since not all
+pigmentation stages were caught at other locations, and only substrates
+were used to catch glass eels.
+
+\subsection{Diversity Indices}\label{diversity-indices}
+
+As in Charlottes' bachelorproef, we could calculate several diversity
+indices. However, these are clasiccally used in ecological community
+turnover studies. Are these really applicable?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(vegan)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'vegan' was built under R version 3.4.4
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: permute
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'permute' was built under R version 3.4.4
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'lattice' was built under R version 3.4.4
+\end{verbatim}
+
+\begin{verbatim}
+## This is vegan 2.5-4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud_index2 <-}\StringTok{ }\KeywordTok{select}\NormalTok{(maaginhoud2, nr, Microplastics.Contaminatie.vezels..katoen..}\OperatorTok{:}\NormalTok{Plantae.sp.)}
+\NormalTok{maaginhoud_index2 <-}\StringTok{ }\KeywordTok{remove_empty}\NormalTok{(maaginhoud_index2, }\StringTok{'rows'}\NormalTok{)}
+
+
+\NormalTok{maaginhoud7 <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(maaginhoud7, }\DataTypeTok{Shannon =} \KeywordTok{diversity}\NormalTok{(maaginhoud_index2, }\DataTypeTok{index=}\StringTok{"shannon"}\NormalTok{, }\DataTypeTok{MARGIN=}\DecValTok{1}\NormalTok{, }\DataTypeTok{base=}\KeywordTok{exp}\NormalTok{(}\DecValTok{1}\NormalTok{)))}
+\NormalTok{maaginhoud7 <-}\StringTok{ }\KeywordTok{mutate}\NormalTok{(maaginhoud7, }\DataTypeTok{Simpson =} \KeywordTok{diversity}\NormalTok{(maaginhoud_index2, }\DataTypeTok{index=}\StringTok{"simpson"}\NormalTok{, }\DataTypeTok{MARGIN=}\DecValTok{1}\NormalTok{, }\DataTypeTok{base=}\KeywordTok{exp}\NormalTok{(}\DecValTok{1}\NormalTok{)))}
+
+\NormalTok{plot_Shannon_tijd_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(datum), Shannon, }\DataTypeTok{color =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Shannon-Index vs time"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Shannon-Index"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+  \CommentTok{#facet_zoom( x = Locatie_A == "Pompgemaal")}
+\NormalTok{plot_Shannon_tijd_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_Shannon_pigm_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, Shannon, }\DataTypeTok{color =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Shannon-Index vs pigmentation stage"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Shannon-Index"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Pigmentation Stage"}\NormalTok{)}
+  \CommentTok{#facet_zoom( x = Locatie_A == "Pompgemaal")}
+\NormalTok{plot_Shannon_pigm_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-12-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_Simpson_tijd_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(}\KeywordTok{week}\NormalTok{(datum), Simpson, }\DataTypeTok{color =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Simpson-Index vs time"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Simpson-Index"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Week van 2017"}\NormalTok{)}
+  \CommentTok{#facet_zoom( x = Locatie_A == "Pompgemaal")}
+\NormalTok{plot_Simpson_tijd_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-12-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_Simpson_pigm_methode <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(maaginhoud7, }\KeywordTok{aes}\NormalTok{(pigmentation.stage, Simpson, }\DataTypeTok{color =}\NormalTok{ Methode)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"SImpson-Index vs pigmentation stage"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_manual}\NormalTok{(}\DataTypeTok{values=}\KeywordTok{wes_palette}\NormalTok{(}\DataTypeTok{n=}\DecValTok{4}\NormalTok{, }\DataTypeTok{name=}\StringTok{"Moonrise2"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(.}\OperatorTok{~}\NormalTok{Locatie_A) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Simpson-Index"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Pigmentation Stage"}\NormalTok{)}
+  \CommentTok{#facet_zoom( x = Locatie_A == "Pompgemaal")}
+\NormalTok{plot_Simpson_pigm_methode}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Data_Exploration_Thesis_A_files/figure-latex/unnamed-chunk-12-4.pdf}
+
+\url{http://spatialecology.weebly.com/r-code--data/category/plotting}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud8 <-}\StringTok{ }\KeywordTok{select}\NormalTok{(maaginhoud2, Microplastics.Contaminatie.vezels..katoen..}\OperatorTok{:}\NormalTok{Plantae.sp.)}
+
+\NormalTok{accurve<-}\KeywordTok{specaccum}\NormalTok{(maaginhoud8, }\DataTypeTok{method=}\StringTok{"random"}\NormalTok{, }\DataTypeTok{permutations=}\DecValTok{100}\NormalTok{)}
+\CommentTok{#plot(accurve$sites, accurve$richness, xlab="Number of glass eel analysed", ylab="Species Richness")}
+\end{Highlighting}
+\end{Shaded}
+
+\section{PCA}\label{pca}
+
+PCA as exploration of the stomach analysis data
+
+\url{https://www.datacamp.com/community/tutorials/pca-analysis-r}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maaginhoud2.pca <-}\StringTok{ }\KeywordTok{prcomp}\NormalTok{(}\KeywordTok{na.omit}\NormalTok{(maaginhoud2[}\DecValTok{7}\OperatorTok{:}\DecValTok{24}\NormalTok{]), }\DataTypeTok{center =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{scale. =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(maaginhoud2.pca)}
+\KeywordTok{ggbiplot}\NormalTok{(maaginhoud2.pca)}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

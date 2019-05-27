@@ -1,0 +1,175 @@
+---
+title: "Fatty Acid Analysis"
+author: "Michiel Perneel"
+date: "26 april 2019"
+output: html_document
+---
+
+# Fatty Acid analysis
+
+```{r setup, include=FALSE}
+
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(wesanderson)
+library(tibble)
+library(dplyr)
+library(janitor)
+library(plyr)
+library(anytime)
+library(ggforce)
+library(vegan)
+library(tidyr)
+
+FA <- as.tibble(read.csv2("C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/Fatty Acids.csv", sep = ";", header = TRUE, dec = ","))
+
+data_inbo <- as.tibble(read.csv2("C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/data_inbo_glasaal_gekuist.csv", sep = ";", header = TRUE, dec = ","))
+data_inbo_sub <- filter(data_inbo, Location_type == "SU")
+
+data_inbo2 <- as.tibble(read.csv2("C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/Glass eel stock deepfreeze 2017.csv", sep = ";", dec = ","))
+
+```
+
+Workflow:
+- 1 multivariate & univariate approach based on the absolute concentrations (mg/g, g/100g)  
+    -> If the need arises to transform the data, use double square root
+  
+- 1 multivariate & univariate approach based on the relative frequencies (eg. g/100g / total FA)
+    -> If the need arises to transform the data, use log transformation
+    -> due to homeostasy, it could very well be that this results in a patten only in frequency analysis
+    
+    
+# --------------- Absolute Concentrations  --------------------------------
+    
+```{r}
+temp <- select(data_inbo2, nr, Date, Catchment.method, pigmentation.stage, condition.factor)
+FA_env_abs <- left_join(FA, temp, by = "nr")
+
+
+FA_env_abs <- FA_env_abs %>%
+  mutate(Date = as.Date(Date, format = "%d/%m/%Y"))
+
+FA_env_abs[FA_env_abs < 0] <- NA
+FA_env_abs <-FA_env_abs[complete.cases(FA_env_abs),]
+
+write.csv(FA_env_abs[1:26], file = "C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/FA_env_abs.csv")
+```
+
+## -------------- Check assumptions ------------
+
+
+
+
+# --------------- Relative Frequencies --------------------------------
+
+```{r}
+FA_env_rel <- FA_env_abs
+FA_env_rel[2:26] <- FA_env_abs[2:26] / FA_env_abs$total.Fatty.acids
+FA_env_rel_factors <- select(FA_env_rel, nr, Date, Catchment.method, pigmentation.stage, condition.factor)
+
+write.csv(FA_env_rel[1:26], file = "C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/FA_env_rel.csv")
+
+write.csv(FA_env_rel_factors, file = "C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/FA_env_rel_factors.csv")
+```
+
+
+
+Visual Exploration
+
+```{r}
+plot1 <- ggplot(FA_env, aes(Date, total.Fatty.acids, group = Catchment.method, colour = Catchment.method)) +
+  geom_point()
+plot1 # elver outlier
+
+FA_env_sub <- filter(FA_env, Catchment.method == "Substraat")
+
+FA1 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X14.00)) +
+  geom_boxplot()
+FA1
+FA2 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X15.00)) +
+  geom_boxplot()
+FA2
+FA3 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X16.00)) +
+  geom_boxplot()
+FA3
+FA4 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X16.1.iso.17.0)) +
+  geom_boxplot()
+FA4
+FA5 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$cis.9.16.1)) +
+  geom_boxplot()
+FA5
+FA6 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X17.00)) +
+  geom_boxplot()
+FA6
+FA7 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X17.1.16.2)) +
+  geom_boxplot()
+FA7
+FA8 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X18.00)) +
+  geom_boxplot()
+FA8
+FA9 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$cis.9.18.1)) +
+  geom_boxplot()
+FA9
+FA10 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$cis.11.18.1)) +
+  geom_boxplot()
+FA10
+FA11 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X18.2n.6)) +
+  geom_boxplot()
+FA11
+FA12 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.00)) +
+  geom_boxplot()
+FA12
+FA13 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X18.3n.3)) +
+  geom_boxplot()
+FA13
+FA14 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X18.4n.3)) +
+  geom_boxplot()
+FA14
+FA15 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.01)) +
+  geom_boxplot()
+FA15
+FA16 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.3n.6)) +
+  geom_boxplot()
+FA16
+FA17 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X22.00)) +
+  geom_boxplot()
+FA17
+FA18 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.4n.6)) +
+  geom_boxplot()
+FA18
+FA19 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.4n.3)) +
+  geom_boxplot()
+FA19
+FA20 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X20.5n.3)) +
+  geom_boxplot()
+FA20
+FA21 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X24.01.00)) +
+  geom_boxplot()
+FA21
+FA22 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X22.5n.6)) +
+  geom_boxplot()
+FA22
+FA23 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X22.5n.3)) +
+  geom_boxplot()
+FA23
+FA24 <- ggplot(FA_env_sub, aes(as.character(week(Date)), FA_env_sub$X22.6n.3)) +
+  geom_boxplot()
+FA24
+
+
+
+```
+
+Correlations
+
+```{r}
+total_condition <- ggplot(FA_env_sub, aes(total.Fatty.acids, condition.factor)) +
+  geom_point()
+total_condition
+
+total_pigm <- ggplot(FA_env_sub, aes(Date, total.Fatty.acids, group = pigmentation.stage, colour = pigmentation.stage)) +
+  geom_point()
+total_pigm
+```
+

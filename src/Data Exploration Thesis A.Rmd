@@ -1,0 +1,537 @@
+---
+title: "Data exploration Thesis"
+subtitle: "Version 1"
+author: "Michiel Perneel"
+date: "March 2019"
+output:
+  html_document
+---
+# Data setup
+
+In this section, all the required libraries are read, and the data is uploaded in r.
+https://bookdown.org/yihui/rmarkdown/output-formats.html
+
+
+```{r setup, include=FALSE}
+#update.packages()
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(wesanderson)
+library(tibble)
+library(ggbiplot)
+library(dplyr)
+library(janitor)
+library(plyr)
+library(anytime)
+library(ggforce)
+```
+
+Now the data is loaded
+
+```{r}
+setwd("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw")
+maaginhoud <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud.csv", sep = ";", dec = ",")) # leest de ruwe dataset (count van maaginhoud)
+head(maaginhoud)
+maaginhoud2 <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud2.csv", sep = ";", dec = ","))
+head(maaginhoud2)
+data_inbo <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Glass eel stock deepfreeze 2017.csv", sep = ";", dec = ","))
+# leest de data van het inbo genoteerd bij de glasaalstaalname
+head(data_inbo)
+data_inbo$Date <- strptime(as.character(data_inbo$Date), "%d/%m/%Y")
+
+```
+
+And then we can start exploring!
+
+# Visual Exploration
+
+## Environmental Data from INBO
+
+```{r pressure, echo=FALSE}
+# Setting the sampling locations in the correct order
+data_inbo$Location <- factor(data_inbo$Location, levels = c("GA_SU", "VA_SC_LO_SU", "VA_SC_RO_SU", "VA_MI_RO_SU", "VA_PG_LO_SU", "VA_PG_RO_SU", "VA_PG_LO_PA", "VA_PG_RO_PA", "VA_PG_KR_NA"))
+
+#data_inbo$Location <- revalue(data_inbo$Location, c("GA_SU"="Ganzepoot Substraat", "VA_SC_LO_SU"="Veurne-Ambacht SC Linkeroever Substraat", "VA_SC_RO_SU"="Veurne-Ambact SC Rechteroever Substraat", "VA_MI_RO_SU"="Veurne-Ambacht Midden Rechteroever Substraat", "VA_PG_LO_SU"="Veurne-Ambacht Pompgemaal Linkeroever Substraat", "VA_PG_RO_SU"="Veurne-Ambacht Pompgemaal Rechteroever Substraat", "VA_PG_LO_PA"="Veurne-Ambacht Pompgemaal Linkeroever Palinggoot", "VA_PG_RO_PA"="Veurne-Ambacht Pompgemaal Rechteroever Palinggoot", "VA_PG_KR_NA"="Veurne-Ambacht Pompgemaal Kruisnetten"))
+
+barplot1 <- ggplot(data_inbo, aes(Location)) +
+  geom_bar() +
+  ggtitle("Location of glass eel catch") +
+  ylab("Number of glass eel caught")
+barplot1
+
+barplot2 <- ggplot(data_inbo, aes(Catchment.method, fill  = Catchment.method)) +
+  geom_bar() +
+  ylab("Number of glass eel caught") +
+  scale_fill_manual(values=wes_palette(n=3, name="Moonrise2")) + 
+  ggtitle("Catchment method") +
+  xlab(" Catchment Method")
+  theme_classic()
+barplot2
+
+barplot3 <- ggplot(data_inbo, aes(month(Date), fill = month(Date))) +
+  geom_bar() +
+  ylab("Number of glass eel caught") +
+  scale_fill_manual(values=wes_palette(n=3, name="Moonrise2")) + 
+  xlab("Month of year 2017") +
+  ggtitle("Month of glass eel catch") +
+  theme_classic()
+barplot3
+
+pal <- wes_palette("Zissou1", 6, type = "continuous")
+barplot4 <- ggplot(data_inbo, aes(week(Date), fill = ..count..)) +
+  geom_bar() +
+  xlab("Week of year 2017") +
+  ylab("Numbers of glass eel caught") +
+  ggtitle("Week of glass eel catch") +
+  scale_fill_gradient(low = pal[3], high = pal[6]) +
+  theme_classic()
+barplot4
+
+plot5 <- ggplot(data_inbo, aes(week(Date), length..mm.)) +
+  geom_point() +
+  ggtitle("Length of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method) +
+  xlab("Lengte glasaal in mm") +
+  ylab("Week van het jaar 2017") 
+plot5
+
+plot6 <- ggplot(data_inbo, aes(week(Date), weight.mg.)) +
+  geom_point() + 
+  ggtitle("Weight of glass eel vs week of catchment") +
+  xlab("Gewicht glasaal in mm") +
+  ylab("Week van het jaar 2017") +
+  facet_grid(.~Catchment.method)
+plot6
+
+# gekke outlier eruit
+data_inbo <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Glass eel stock deepfreeze 2017.csv", sep = ";", dec = ",")) # leest de data van het inbo genoteerd bij de glasaalstaalname opnieuw, zo is datum nog geen POSIXlt object
+data_inbo_wo_outlier <- filter(data_inbo, weight.mg. < 1500) # haalt er de elver uit
+plot7 <- ggplot(data_inbo_wo_outlier, aes(week(Date), weight.mg.)) +
+  geom_point() + 
+  ggtitle("Weight of glass eel vs week of catchment") +
+  ylab("Gewicht glasaal in mg") +
+  xlab("Week van het jaar 2017") +
+  facet_grid(.~Catchment.method)
+plot7
+
+data_inbo$Date <- strptime(as.character(data_inbo$Date), "%d/%m/%Y")
+
+plot8 <- ggplot(data_inbo, aes(week(Date), fill = pigmentation.stage)) +
+  ggtitle("Pigmentation stage of glass eel vs week of catchment") +
+  geom_bar(aes(fill = pigmentation.stage), width = 1) +
+  xlab("Week van het jaar 2017") +
+  ylab("Aantal gevangen glasalen")
+plot8
+
+
+```
+
+## Sampling location 
+
+TO DO: map met locaties aangeduid op satellietafbeelding
+
+VA_PG_LO_PA: Veurne Ambacht canal pumping station left bank eel ladder
+VA_PG_RO_PA: Veurne Ambacht canal pumping station right bank eel ladder
+VA_PG_LO_SU: Veurne Ambacht canal pumping station left bank substrates
+VA_PG_RO_SU: Veurne Ambacht canal pumping station right bank substrates
+VA_MI_LO_SU: Veurne Ambacht canal middle left bank substrates
+VA_MI_RO_SU: Veurne Ambacht canal middle right bank substrates
+VA_SC_LO_SU: Veurne Ambacht canal sluicecomplex Ganzepoot left bank substrates
+VA_SC_RO_SU:  Veurne Ambacht canal sluicecomplex Ganzepoot right bank substrates
+VA_PG_KR_NA: Veurne Ambacht canal pumpingstation liftnets night
+GA_SU: Ganzepoot substrates
+
+## Piecharts
+
+https://www.zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/
+
+
+```{r}
+
+colnames <- c("Microplastics.Contaminatie.vezels..katoen..", "Cladocera.sp.", "Annelida", "Polychaete", "Isopoda", "Diptera.sp.", "Chironomida.sp.", "Crustaceae.sp.", "Cycloida.sp.", "Unidentified.sp.", 'Amphipoda.sp.', 'Calanoida.sp.', "Copepoda.sp.", "Harpacticoid.Copepod", "Hexapode.sp....", "keverlarve", "Pennate.diatomee","Plantae.sp.")
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud2, aes_string(x="''", y = colnames[i], fill = "Methode")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud2, aes_string(x="''", y = colnames[i], fill = "Locatie_A")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+```
+
+
+But now, we want to constructs piecharts which are not absolute numbers, but relative numbers.
+For example, if a glass eel ate 1 polychaete out of the total of 50 found polychaetes, this results in a relative number on the pie chart of 2%
+
+```{r}
+maaginhoud2 <- remove_empty(maaginhoud2, 'rows')
+col_sum <- colSums(maaginhoud2[7:24], na.rm = TRUE)
+
+maaginhoud3 <- maaginhoud2[1:6]
+new_column <- list()
+
+for (count in 7:length(maaginhoud2)) {
+  new_column <- (maaginhoud2[count] / col_sum[count - 6])
+  maaginhoud3 <- cbind(maaginhoud3, new_column)
+}
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud3, aes_string(x="''", y = colnames[i], fill = "Methode")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud3, aes_string(x="''", y = colnames[i], fill = "Locatie_A")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+
+```
+
+Now we want to compose relative piecharts divided according to pigmentation stage
+
+```{r}
+data_inbo_pigmentation <- data_inbo[,c("nr","pigmentation.stage")]
+maaginhoud4 <- left_join(maaginhoud2, data_inbo_pigmentation, by='nr')
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud4, aes_string(x="''", y = colnames[i], fill = "pigmentation.stage")) +
+    geom_bar(width = 1, stat="identity")
+  pie <- bp + coord_polar("y", start= 0)
+  print(pie)
+}
+ 
+```
+
+Now we want to compare what the relative percentage caught per method & location is
+To do so, we need a transposed data table. This needs some more work
+
+```{r, eval = FALSE, echo = FALSE}
+maaginhoud5 <- select(maaginhoud2, -nr, -datum, -Locatie, -Locatie_A, -Locatie_Oever)
+maaginhoud5 <- group_by(maaginhoud5, "Methode")
+maaginhoud5 <- data.frame(t(maaginhoud5), header = TRUE)
+names(maaginhoud5) <- maaginhoud5[1,]
+maaginhoud5 <- maaginhoud5[-1,]
+
+
+```
+
+## Bargraphs
+
+Hier wordt weergegeven welke organismen op welke tijd van het jaar in verschillende pigmentatiestadia van de glasaal teruggevonden werden.
+
+```{r}
+
+for (i in 1:length(colnames)) {
+  bp <- ggplot(maaginhoud4, aes_string(x=week(as.Date(maaginhoud4$datum)), y = colnames[i], fill = "pigmentation.stage")) +
+    geom_bar(width = 1, stat="identity") +
+    xlab(label = "Week of 2017")
+  print(bp)
+}
+```
+
+# Environmental samples
+
+Een ideetje om de Forage ratio te berekenen. Forage ratio:
+
+$$ \frac{percent~weight~of~food~item~i~in~stomach~of~glass~eel~w}{percent~weight~of~food~item~i~in~the~environment}~~~~ x ~~ 100  $$
+Hier bekijken we eens de dataset waarin het aantal individuen per liter werd bekeken in 2016, maar om de bovenstaande ratio te berekenen zou toch een set van het jaar 2017 nodig zijn. Is die er?
+
+```{r}
+environment2016_ind <- as.tibble(read.csv("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Individuals per liter 2016.csv", sep = ";", header = TRUE, dec = ","))
+
+env_cyclo <- ggplot(environment2016_ind, aes(week(as.Date(Datum)), Cyclopoida)) +
+  geom_point() +
+  ylab("Cyclopoida ind/L 2016")
+env_cyclo
+
+env_alona_a <- ggplot(environment2016_ind, aes(week(Datum), Alona.affinis)) +
+  geom_point() +
+  ylab("Alona affinis ind/L 2016")
+env_alona_a
+
+env_alona_r <- ggplot(environment2016_ind, aes(week(Datum), Alona.rectangula)) +
+  geom_point() +
+  ylab("Alona rectangula ind/L 2016")
+env_alona_r
+
+env_chydorus <- ggplot(environment2016_ind, aes(week(Datum), Chydorus.sphaericus)) +
+  geom_point() +
+  ylab("Chydorus sphaericus ind/L 2016")
+env_chydorus
+
+env_daphnia <- ggplot(environment2016_ind, aes(week(Datum), Daphnia.galeata)) +
+  geom_point() +
+  ylab("Daphnia galeata ind/L 2016")
+env_daphnia 
+
+env_pleuroxus <- ggplot(environment2016_ind, aes(week(Datum), Pleuroxus.aduncus)) +
+  geom_point() +
+  ylab("Pleuroxus aduncus ind/L 2016")
+env_pleuroxus
+```
+
+
+
+
+# Indices
+
+Here, we calculate some indices from the dataset and visually explore these. 
+
+## Stomach content analysis indices
+### Condition Factor
+
+First, the condition factor is analysed. Condition factor is already a variable in the dataset, calculated by the INBO.
+
+Vraag voor jeroen: hoe werd deze conditiefactor juist berekend?
+
+```{r}
+plot_condfact_method <- ggplot(data_inbo, aes(week(Date), condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor of glass eel vs week of catchment") +
+  facet_grid(.~Catchment.method) +
+  xlab("Conditiefactor") +
+  ylab("Week van het jaar 2017")
+plot_condfact_method
+
+plot_condfact_location <- ggplot(data_inbo, aes(week(Date), condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor of glass eel vs week of catchment") +
+  facet_grid(.~Location)
+plot_condfact_location
+
+plot_condfact_pigm <- ggplot(data_inbo, aes(pigmentation.stage, condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor of glass eel vs week of catchment") 
+plot_condfact_pigm
+
+# Nu de conditiefactor duidelijker weergeven, maar nu enkel voor de al verwerkte glasalen
+
+nr_locatie_methode <- select(maaginhoud2, nr, Locatie_A, Locatie_Oever, Methode)
+nr_pigmentation_condfact <- select(data_inbo, nr, pigmentation.stage, condition.factor)
+
+maaginhoud6 <- select(maaginhoud, nr, datum, Gewicht.Glasaal, Gewicht.maag.darmstelsel)
+maaginhoud6 <- mutate(maaginhoud6, ratio_visceral_total = Gewicht.maag.darmstelsel / Gewicht.Glasaal)
+maaginhoud6_wo_outlier <- filter(maaginhoud6, ratio_visceral_total < 1) # reden: zie hieronder
+maaginhoud6_wo_outlier$datum <- strptime(as.character(maaginhoud6_wo_outlier$datum), "%d/%m/%Y")
+
+maaginhoud7 <- left_join(maaginhoud6_wo_outlier, nr_locatie_methode, by='nr')
+maaginhoud7 <- left_join(maaginhoud7, nr_pigmentation_condfact, by='nr')
+
+plot_condfact_location_2 <- ggplot(maaginhoud7, aes(week(as.Date(datum)), condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor vs week of catchment") +
+  facet_grid(.~Locatie_A) +
+  xlab("Week van het jaar 2017") +
+  ylab("Conditiefactor")
+plot_condfact_location_2
+
+plot_condfact_method_2 <- ggplot(maaginhoud7, aes(week(as.Date(datum)), condition.factor)) +
+  geom_point() +
+  ggtitle("Condition factor vs week of catchment") +
+  facet_grid(.~Methode) +
+  xlab("Week van het jaar 2017") +
+  ylab("Conditiefactor")
+plot_condfact_method_2
+
+```
+### Number method
+
+$$ \frac{amount~of~food~~item~i}{total~number~of~items~found~in~gut}~~~~ x ~~ 100  $$
+Vertelt dit niet wat hetzelfde als de piecharts?
+Onderstaande code werkt ook nog niet helemaal...
+
+```{r, eval = FALSE}
+maaginhoud_index1  <- maaginhoud2[1:6]
+maaginhoud_temp <- maaginhoud2[7:24]
+for (rw in 1:length(maaginhoud_temp)) { 
+    tmp <- maaginhoud_temp[rw,]/sum(maaginhoud_temp[rw,]) 
+    if (tmp) {
+          maaginhoud_index1 <- rbind(maaginhoud_index1, tmp); 
+    } else {
+      maaginhoud_index1 <- rbind(maaginhoud_index1, maaginhoud_temp[rw,])
+    }
+} 
+```
+
+
+### Ratio visceral organs/total body mass
+
+Second, we calculate the ratio of visceral organs on total body mass.Dit is een index voor de 'fulness' van de glasaal.
+
+$$ \frac{weight~of~stomach-gut~system~of~glass~eel~w}{total~body~mass~of~glass~eel~w}~~~~ x ~~ 100  $$
+
+```{r}
+plot_ratio_method <- ggplot(maaginhoud6, aes(week(as.Date(datum)), ratio_visceral_total)) +
+  geom_point() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs week of catchment") +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+plot_ratio_method  # Dikke outlier wegwerken
+
+plot_ratio_method <- ggplot(maaginhoud6_wo_outlier, aes(week(as.Date(datum)), ratio_visceral_total)) +
+  geom_point() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs week of catchment") +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+plot_ratio_method 
+```
+
+According to previous plot, glass eel do tend to be more fed at the end of spring. This is true for all catchment methods & locations. But is this really the case?
+
+```{r}
+
+plot_ratio_location <- ggplot(maaginhoud7, aes(week(as.Date(datum)), ratio_visceral_total)) +
+  geom_point() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs week of catchment") +
+  facet_grid(.~Locatie_A) +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+plot_ratio_location
+
+plot_ratio_method <- ggplot(maaginhoud7, aes(week(as.Date(datum)), ratio_visceral_total)) +
+  geom_point() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs week of catchment") +
+  facet_grid(.~Methode) +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+plot_ratio_method
+
+plot_ratio_location2 <- ggplot(maaginhoud7, aes(week(as.Date(datum)), ratio_visceral_total)) +
+  geom_point() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs week of catchment") +
+  facet_grid(.~Locatie_Oever) +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+plot_ratio_location2
+
+plot_ratio_pigm_methode <- ggplot(maaginhoud7, aes(pigmentation.stage, ratio_visceral_total, fill = Methode)) +
+  geom_boxplot() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs pigmentation stage") +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Pigmentatiestadium") +
+  scale_fill_manual(values=wes_palette(n=3, name="Moonrise2"))  
+plot_ratio_pigm_methode
+
+plot_ratio_pigm_locatie <- ggplot(maaginhoud7, aes(pigmentation.stage, ratio_visceral_total, fill = Locatie_A)) +
+  geom_boxplot() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs pigmentation stage") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Pigmentatiestadium")
+plot_ratio_pigm_locatie
+
+plot_ratio_pigm_methode <- ggplot(maaginhoud7, aes(pigmentation.stage, ratio_visceral_total, fill = Methode)) +
+  geom_boxplot() +
+  scale_fill_manual(values=wes_palette(n=3, name="Moonrise2")) + 
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs pigmentation stage") +
+  facet_grid(.~Locatie_A) +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Pigmentatiestadium")
+plot_ratio_pigm_methode
+
+plot_ratio_tijd_methode <- ggplot(maaginhoud7, aes(week(datum), ratio_visceral_total, fill = Methode)) +
+  geom_boxplot() +
+  ggtitle("Ratio of visceral organs on total body mass of glass eel vs time") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  facet_grid(.~Locatie_A) +
+  ylab("Ratio viscerale organen / Totale lichaamsgewicht glasaal") +
+  xlab("Week van 2017")
+  #facet_zoom( x = Locatie_A == "Pompgemaal")
+plot_ratio_tijd_methode
+
+```
+
+And indeed, it is the case across methods and locations.However, data from the pompgemaal is probably most reliable, since not all pigmentation stages were caught at other locations, and only substrates were used to catch glass eels.
+
+## Diversity Indices
+
+As in Charlottes' bachelorproef, we could calculate several diversity indices. However, these are clasiccally used in ecological community turnover studies. Are these really applicable?
+
+```{r}
+library(vegan)
+maaginhoud_index2 <- select(maaginhoud2, nr, Microplastics.Contaminatie.vezels..katoen..:Plantae.sp.)
+maaginhoud_index2 <- remove_empty(maaginhoud_index2, 'rows')
+
+
+maaginhoud7 <- mutate(maaginhoud7, Shannon = diversity(maaginhoud_index2, index="shannon", MARGIN=1, base=exp(1)))
+maaginhoud7 <- mutate(maaginhoud7, Simpson = diversity(maaginhoud_index2, index="simpson", MARGIN=1, base=exp(1)))
+
+plot_Shannon_tijd_methode <- ggplot(maaginhoud7, aes(week(datum), Shannon, color = Methode)) +
+  geom_point() +
+  ggtitle("Shannon-Index vs time") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  facet_grid(.~Locatie_A) +
+  ylab("Shannon-Index") +
+  xlab("Week van 2017")
+  #facet_zoom( x = Locatie_A == "Pompgemaal")
+plot_Shannon_tijd_methode
+
+plot_Shannon_pigm_methode <- ggplot(maaginhoud7, aes(pigmentation.stage, Shannon, color = Methode)) +
+  geom_point() +
+  ggtitle("Shannon-Index vs pigmentation stage") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  facet_grid(.~Locatie_A) +
+  ylab("Shannon-Index") +
+  xlab("Pigmentation Stage")
+  #facet_zoom( x = Locatie_A == "Pompgemaal")
+plot_Shannon_pigm_methode
+
+plot_Simpson_tijd_methode <- ggplot(maaginhoud7, aes(week(datum), Simpson, color = Methode)) +
+  geom_point() +
+  ggtitle("Simpson-Index vs time") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  facet_grid(.~Locatie_A) +
+  ylab("Simpson-Index") +
+  xlab("Week van 2017")
+  #facet_zoom( x = Locatie_A == "Pompgemaal")
+plot_Simpson_tijd_methode
+
+plot_Simpson_pigm_methode <- ggplot(maaginhoud7, aes(pigmentation.stage, Simpson, color = Methode)) +
+  geom_point() +
+  ggtitle("SImpson-Index vs pigmentation stage") +
+  scale_fill_manual(values=wes_palette(n=4, name="Moonrise2")) + 
+  facet_grid(.~Locatie_A) +
+  ylab("Simpson-Index") +
+  xlab("Pigmentation Stage")
+  #facet_zoom( x = Locatie_A == "Pompgemaal")
+plot_Simpson_pigm_methode
+```
+
+
+
+http://spatialecology.weebly.com/r-code--data/category/plotting
+
+```{r, eval=FALSE}
+
+maaginhoud8 <- select(maaginhoud2, Microplastics.Contaminatie.vezels..katoen..:Plantae.sp.)
+
+accurve<-specaccum(maaginhoud8, method="random", permutations=100)
+#plot(accurve$sites, accurve$richness, xlab="Number of glass eel analysed", ylab="Species Richness")
+```
+
+
+# PCA
+
+PCA as exploration of the stomach analysis data
+
+https://www.datacamp.com/community/tutorials/pca-analysis-r
+
+
+```{r, eval = FALSE}
+
+maaginhoud2.pca <- prcomp(na.omit(maaginhoud2[7:24]), center = TRUE, scale. = TRUE)
+str(maaginhoud2.pca)
+ggbiplot(maaginhoud2.pca)
+```

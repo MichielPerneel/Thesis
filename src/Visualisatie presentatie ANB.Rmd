@@ -1,0 +1,255 @@
+---
+title: "Visualisation ANB presentation"
+author: "Michiel Perneel"
+date: "26 maart 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(wesanderson)
+library(tibble)
+library(dplyr)
+library(janitor)
+library(plyr)
+library(anytime)
+library(ggforce)
+library(vegan)
+library(tidyr)
+
+data_inbo <- as.tibble(read.csv2("C:/Users/Admin/Documents/Biologie/Master/Thesis/Thesis/data/raw/data_inbo_glasaal_gekuist.csv", sep = ";", header = TRUE, dec = ","))
+data_inbo_sub <- filter(data_inbo, Location_type == "SU")
+```
+
+
+## Analyse
+
+Introductie: focus op het natuurlijke gedrag van glasaal in een estuarien systeem. Glasalen willen van nature het estuarium en de daaropvolgende rivieren & kanalen willen optrekken. (.)
+Helaas is dit niet mogelijk op veel plaatsen door migratiebarrières eg. tidale sluizen (Voorbeeld bij ons: De Ganzepoot). Gelukkig is er sinds 2017 het aangepast spuibeheer die in het voorjaar de sluizen op een kiertje zet tijdens vloed, zodat glasalen toch naar binnen kunnen. Maar, daarna komen ze opnieuw een knelpunt tegen in het aansluitende Veurne-Ambachtkanaal: het pompstation. De glasalen zitten dus vast in VA en de vraag is dus of ze zich kunnen handhaven in dat kanaal. Hoe werkt de stroomrichting in het VA-kanaal? Hoe werkt het getij er? Hoe zien de oevers eruit? Wat is de structuur van het systeem? 
+Dan volgt een uitleg over de staalname-opzet, waar enkel de substraten vermeld worden. Hoe werkt zo'n substraat, hoe ziet het eruit? Wat zijn de resultaten, i.e. het totaal aantal gevangen glasalen (elvers dus weglaten) per jaar, enkel voor deze substraten.
+
+### Totale vangst
+
+```{r}
+data_inbo_sub$Date <- strptime(as.character(data_inbo_sub$Date), "%d/%m/%Y")
+data_inbo_sub <- mutate(data_inbo_sub, year = as.character(year(as.Date(data_inbo_sub$Date))))
+data_inbo_sub <- mutate(data_inbo_sub, month = as.character(month(as.Date(data_inbo_sub$Date))))
+data_inbo_sub <- mutate(data_inbo_sub, week = as.character(week(as.Date(data_inbo_sub$Date))))
+
+pal <- wes_palette("Zissou1", 6, type = "continuous")
+barplot1 <- ggplot( na.omit(data_inbo_sub), aes(month, fill = ..count..)) +
+  geom_bar() +
+  xlab("Maand") +
+  ylab("Aantal gevangen glasaaltjes") +
+  scale_fill_gradient(low = pal[3], high = pal[6]) +
+  scale_x_discrete(labels = c("Maart", "April", "Mei")) +
+  facet_grid(.~year)
+barplot1
+```
+
+
+## Conditie
+
+Hierna tonen we de conditie van de glasaaltjes die in 2017 in de substraten gevonden werden. Deze worden weergegeven in een facet_grid, waar de facetten in geografische volgorde liggen. Belangrijk hier is dat de conditie weergegeven wordt van alle glasaaltjes uit 2017, niet enkel de dataset die ikzelf samenstelde. Best ook de formule weergeven hoe deze conditie berekend werd. 
+
+
+```{r pressure, echo=FALSE}
+data_inbo_sub$Date <- as.POSIXct(data_inbo_sub$Date)
+
+data_inbo_sub_17 <- filter(data_inbo_sub, year == "2017")
+data_inbo_sub_17 <- separate(data_inbo_sub_17, Location, c("Kanaal", "Locatie", "Oever", "Methode"), sep = "_", fill = "right")
+
+plot2 <- ggplot( data_inbo_sub_17, aes(week(Date), Condition_factor)) +
+  geom_point() +
+  facet_grid(.~Kanaal) 
+  
+plot2
+
+data_inbo_sub_17_VA <- filter(data_inbo_sub_17, Locatie %in% c("SC", "MI", "PG"))
+
+
+data_inbo_sub_17_VA <- mutate(data_inbo_sub_17_VA, Locatie = revalue(Locatie, c("SC" = "Sluizencomplex", "MI" = "Midden VA", "PG" = "Pompgemaal")))
+data_inbo_sub_17_VA$Locatie <- factor(data_inbo_sub_17_VA$Locatie, levels = c("Sluizencomplex", "Midden VA", "Pompgemaal"))
+
+
+plot3 <- ggplot(data_inbo_sub_17_VA, aes(Date, Condition_factor)) +
+  geom_point() +
+  geom_smooth() +
+  facet_grid(.~Locatie) +
+  xlab("Datum (2017)") +
+  ylab("Conditiefactor")
+plot3
+
+plot4 <- ggplot(data_inbo_sub_17_VA, aes(Date, Condition_factor)) +
+  geom_point() +
+  geom_smooth() +
+  xlab("Datum (2017)") +
+  ylab("Conditiefactor") +
+  geom_hline(yintercept = 1)
+plot4
+
+# Does the average weight differ between glass eel caught in eel traps or substrates?
+
+data_inbo_sub_pa <- filter
+plot5 <- ggplot(data_inbo, aes(Date, Weight)) +
+  geom_boxplot() +
+  xlab("Vangsttechniek") +
+  ylab("Gewicht") +
+  facet_grid(.~Location_type)
+plot5
+
+```
+
+## Stacked Bargraphs
+
+Eens de conditie is uitgelegd en daarbij aangetoond is dat die toeneemt doorheen de tijd, probeerden we hiervoor een verklaring te zoeken in het voedingsgedrag. Daarvoor hebben we een fractie van de stalen uit 2017 onderzocht (kwalitatieve analyse en geen kwantitatieve analyse!). Hiervoor laden we de samengestelde dataset uit de maaginhoudanalyse
+
+```{r}
+maaginhoud <- as.tibble(read.csv2("C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud.csv", sep = ";", dec = ",")) # leest de ruwe dataset (count van maaginhoud)
+head(maaginhoud)
+maaginhoud2 <- as.tibble(read.csv2("C:/Users/Admin/OneDrive/Documenten/Biologie/Master/Thesis/Thesis/data/raw/Maaginhoud3.csv", sep = ";", dec = ","))
+head(maaginhoud2)
+
+
+```
+
+Wat is de diversiteit aan gevonden soorten (algemeen)? Dit wordt weergegeven in een stacked-bargraph, per locatie en per tijd (maak beide plots eens apart voor ze samen te gooien). Er moet aangegeven worden hoeveel glasalen per locatie gevangen werden. Belangrijk: gemiddelden per individu (hoe?), % lege magen, cyloida -> cyclopoida.
+Samengevat, na conditie:
+1.	Algemeen: welk voedsel werd gevonden in de magen
+2.	Hoe verschilt de relatieve samenstelling voor verschillende locaties (vermoedelijk weinig verschil)
+3.	Hoe verschilt de relatieve samenstelling over tijd (cfr fig. 3 in bachelorproef Charlotte)
+
+```{r}
+maaginhoud_substrate <- filter(maaginhoud2, Methode == "Artificial Substrates" )
+maaginhoud_count_su <- select(maaginhoud_substrate, nr, datum, Locatie_VA, Empty, Anorganic.Material:Plantae.sp.)
+maaginhoud_count_su <- filter(maaginhoud_count_su, Locatie_VA != "Ganzepoot")
+maaginhoud_count_su$datum <- strptime(as.character(maaginhoud_count_su$datum), "%d/%m/%Y")
+maaginhoud_count_su <- mutate(maaginhoud_count_su, week = week(maaginhoud_count_su$datum))
+
+maaginhoud_count_su_week <- maaginhoud_count_su[4:23]
+
+# Vooralleerst samen te vatten per week, wordt er best een kleine dataframe gemaakt waarbij per week het aantal lege magen  wordt geteld
+
+maaginhoud_leeg <- maaginhoud_count_su_week[1:2]
+
+maaginhoud_leeg
+
+# Samenvatten per week
+maaginhoud_count_su_week <- aggregate(maaginhoud_count_su_week[1:20], by=list(Week=maaginhoud_count_su_week$week), FUN=sum)
+maaginhoud_count_su_week
+maaginhoud_count_su_week <- maaginhoud_count_su_week[1:20]
+
+
+maaginhoud_count_su_week <- mutate(maaginhoud_count_su_week, weektotaal = rowSums(maaginhoud_count_su_week[3:20]))
+species_totaal <- colSums(maaginhoud_count_su_week[3:20])
+sort(species_totaal)
+maaginhoud_count_su_week <- mutate(maaginhoud_count_su_week, Other = Annelida + Hexapode.sp.... + Pennate.diatomee + Isopoda + keverlarve + Diptera.sp. + Crustaceae.sp. + Plantae.sp. + Calanoida.sp. + Chironomida.sp. + Unidentified.sp.)
+
+names(maaginhoud_count_su_week)[names(maaginhoud_count_su_week) == "Microplastics.Contaminatie.vezels..katoen.."] <- "Anorganisch.materiaal"
+
+maaginhoud_barplots <- select(maaginhoud_count_su_week, Week, Anorganisch.materiaal, Cladocera.sp., Polychaete, Amphipoda.sp., Copepoda.sp., Harpacticoid.Copepod, Cyclopoida.sp., Other)
+
+# Frequency of occurrence ipv absolute numbers
+for (i in 2:length(maaginhoud_barplots)) {
+  maaginhoud_barplots[i] <- maaginhoud_barplots[i] / maaginhoud_count_su_week$weektotaal
+}
+
+# Stacked Bargraphs voor SC, MI & PG samen, aparte bargraphs maken per week, en per week het aantal lege magen weergeven
+
+CPCOLS <- c("coral", "lightblue4", "#EFF534CA", "pink2", "palevioletred4", "#79C480E2", "#3F0CADA0", "#8C8484AF")
+
+your.mat.data = c(0.04347826,0.00000000,0.043478261,0.00000000,0.00000000,0.00000000,0.78260870,0.13043478,0.00000000,0.00000000,0.000000000,0.00000000,0.00000000,0.00000000,0.00000000,1.00000000,0.16666667,0.00000000,0.166666667,0.00000000,0.00000000,0.00000000,0.00000000,0.66666667,0.00000000,0.00000000,0.111111111,0.00000000,0.00000000,0.00000000,0.00000000,0.88888889,0.11111111,0.00000000,0.000000000,0.00000000,0.00000000,0.00000000,0.44444444,0.44444444,0.01030928,0.00000000,0.051546392,0.13402062,0.06185567,0.04123711,0.61855670,0.08247423,0.01036269,0.02590674,0.008635579,0.00000000,0.13471503,0.00000000,0.80829016,0.01208981,0.01010101,0.02020202,0.070707071,0.00000000,0.00000000,0.12121212,0.69696970,0.08080808,0.01298701,0.00000000,0.129870130,0.00000000,0.02597403,0.20779221,0.51948052,0.10389610,0.05263158,0.00000000,0.210526316,0.13157895,0.00000000,0.27631579,0.06578947,0.26315789,0.01674641,0.03349282,0.035885167,0.01674641,0.04545455,0.64593301,0.17224880,0.03349282)
+
+data <- matrix(data = your.mat.data, 
+               nrow = 11,
+               ncol = 8,
+               byrow = TRUE)
+colnames(data)=c("Anorganisch materiaal","Cladocera sp.","Polychaeta sp.","Amphipoda sp.","Copepoda sp.","Harpacticoida sp.", "Cyclopoida sp.", "Andere")
+
+rownames(data)=c("11 (E = 2)","12 (E = 4)","13 ( E = 3)", "14 (E = 1)", "15 (E = 2)", "16 ( E = 1)", "17 (E = 0)", "18 (E = 0)", "19 (E = 0)", "20 (E = 0)", "21 (E = 0)")
+
+data <- t(data)
+data <- data * 100
+barplot(data, horiz = TRUE, col = CPCOLS, border="white", space=0.04, font.axis=2, las = 2, cex.names = 0.7, xlab="% FO ")
+legend("right", legend=rownames(data), fill = CPCOLS, title="Groep")
+
+# Focus on Substrate
+
+# Focus on Eel ladders
+
+```
+
+## Fulness-Index
+
+```{r}
+maaginhoud_biometric <- select(maaginhoud, nr, datum, Locatie, Gewicht.Glasaal,Gewicht.maag.darmstelsel)
+location <- select(maaginhoud2, nr, Methode, Leeg, Locatie_A)
+maaginhoud_biometric <- left_join(maaginhoud_biometric, location, by='nr')
+
+maaginhoud_biometric_sub <- filter(maaginhoud_biometric, Methode == "Substraat")
+maaginhoud_biometric_sub <- mutate(maaginhoud_biometric_sub, ratio_visceral_total = Gewicht.maag.darmstelsel / Gewicht.Glasaal)
+maaginhoud_biometric_sub$datum <- strptime(as.character(maaginhoud_biometric_sub$datum), "%d/%m/%Y")
+maaginhoud_biometric_sub$datum <- as.POSIXct(maaginhoud_biometric_sub$datum)
+
+maaginhoud_biometric_sub <- filter(maaginhoud_biometric_sub, Locatie_A != "Ganzepoot")
+maaginhoud_biometric_sub$Locatie_A <- factor(maaginhoud_biometric_sub$Locatie_A, levels = c("Sluizencomplex VA", "Midden VA", "Pompgemaal"))
+
+maaginhoud_biometric_sub$Leeg <- as.factor(maaginhoud_biometric_sub$Leeg)
+
+plot_FI_location <- ggplot(maaginhoud_biometric_sub, aes(datum, ratio_visceral_total)) +
+  geom_point(aes(color = Leeg)) +
+  scale_colour_manual(values = c('black','red')) +
+  geom_smooth() +
+  ggtitle("Maagvolume glasaal gevangen in substraten") +
+  ylab("Fullness Index") +
+  xlab("Datum (2017)") +
+  theme(legend.position = "none")
+plot_FI_location
+
+maaginhoud_biometric_sub$Locatie_A <- factor(maaginhoud_biometric_sub$Locatie_A, levels = c("Sluizencomplex VA", "Midden VA", "Pompgemaal"))
+
+
+plot_FI_location2 <- ggplot(maaginhoud_biometric_sub, aes(datum, ratio_visceral_total)) +
+  geom_point(aes(color = Leeg)) +
+  scale_colour_manual(values = c('black','red')) +
+  geom_smooth() +
+  ggtitle("Maagvolume glasaal gevangen in substraten") +
+  ylab("Fullness Index") +
+  facet_grid(.~Locatie_A) +
+  xlab("Datum (2017)") +
+  theme(legend.position = "none")
+plot_FI_location2
+
+```
+
+
+### Plot relation FI & Condition factor
+
+```{r}
+
+```
+
+
+
+Hierna trekken we enkele conclusies. 
+-	Wanneer in de tijd beginnen de glasalen zich te voeden? Hoe verhoudt dit zich met de locatie   het Veurne-Ambacht? (volheidsindex) (Ook het aantal lege magen weergeven!)
+-	De conditie van de glasalen op de substraten gaat, congruent met de volheidsindex, op het einde van het seizoen naar boven.
+-	Welke prooisoorten komen op het einde van het seizoen voor in het Veurne-Ambachtkanaal, en in welke concentraties?
+Hierna trekken we enkele conclusies. 
+-	Wanneer in de tijd beginnen de glasalen zich te voeden? Hoe verhoudt dit zich met de locatie in het Veurne-Ambacht? (volheidsindex)
+-	De conditie van de glasalen op de substraten gaat, congruent met de volheidsindex, op het einde van het seizoen naar boven.
+-	Welke prooisoorten komen op het einde van het seizoen voor in het Veurne-Ambachtkanaal, en in welke concentraties?
+
+Verder onderzoek
+-	Bevestigen de vetzuuranalyses dit verhaal?
+o	Uit deze analyse gaan we nog niet kunnen besluiten welke prooisoorten bijdragen tot een optimale conditie, maar misschien dat dit wel lukt met vetzuuranalyses. Met andere woorden, het verhaal eindigt niet met je presentatie, maar we gaan nog een belangrijke stap ondernemen (=vetzuuranalyse) om dieper in te gaan op de materie.
+-	Selectieve voeder of opportunist?
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

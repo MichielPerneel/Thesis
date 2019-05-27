@@ -1,0 +1,128 @@
+---
+title: "Analysis complete INBO dataset 2017"
+author: "Michiel Perneel"
+date: "18 maart 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data & Packages
+
+```{r}
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(wesanderson)
+library(tibble)
+library(ggbiplot)
+library(dplyr)
+library(janitor)
+library(plyr)
+library(anytime)
+library(ggforce)
+library(vegan)
+
+environment2016_ind <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Individuals per liter 2016.csv", sep = ";", header = TRUE, dec = ","))
+
+data_inbo_161718_morfo <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/data_inbo_161718_morfo.csv", sep = ";", header = TRUE, dec = ","))
+data_inbo_161718_morfo$Datum <- strptime(as.character(data_inbo_161718_morfo$Datum), "%d/%m/%Y")
+
+data_inbo_gekuist <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/data_inbo_glasaal_gekuist.csv", sep = ";", header = TRUE, dec = ","))
+
+maaginhoud_16 <- as.tibble(read.csv2("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/data vandendriessche.csv", sep = ";", header = TRUE, dec = ","))
+```
+
+## Biometric data
+
+In this part, we read the data from INBO to visualize how much glass eel are caught and what the annual variance is. 
+
+```{r cars}
+data_inbo_gekuist$Date <- strptime(as.character(data_inbo_gekuist$Date), "%d/%m/%Y")
+data_inbo_gekuist <- mutate(data_inbo_gekuist, year = year(data_inbo_gekuist$Date))
+
+pal <- wes_palette("Zissou1", 6, type = "continuous")
+barplot1 <- ggplot( na.omit(data_inbo_gekuist), aes(week(Date), fill = ..count..)) +
+  geom_bar() +
+  xlab("Week") +
+  ylab("Aantal gevangen glasaaltjes") +
+  scale_fill_gradient(low = pal[3], high = pal[6]) +
+  facet_grid(.~year) +
+  theme_classic()
+barplot1
+
+data_inbo_gekuist_17 <- filter(data_inbo_gekuist, as.Date(year) ==  "2017")
+
+geom1 <- ggplot( data_inbo_gekuist, aes(x = week(Date), y = Condition_factor)) +
+  geom_point() +
+  geom_smooth() +
+  xlab("Week of year") +
+  ylab("Condition factor of glass eel caught") +
+  ggtitle("Week of glass eel catch") +
+  scale_fill_gradient(low = pal[3], high = pal[6]) +
+  facet_grid(Location_type~year) +
+  theme_classic()
+geom1
+
+```
+
+Now we visualize how their condition factor changes over time.
+
+## Exploration of 2016 data
+
+```{r}
+environment2016_ind <- as.tibble(read.csv("C:/Users/user/Desktop/Biologie/Master/Thesis/Thesis/data/raw/Individuals per liter 2016.csv", sep = ";", header = TRUE, dec = ","))
+
+env_cyclo <- ggplot(environment2016_ind, aes(week(as.Date(Datum)), Cyclopoida)) +
+  geom_point() +
+  ylab("Cyclopoida ind/L 2016")
+env_cyclo
+
+env_alona_a <- ggplot(environment2016_ind, aes(week(Datum), Alona.affinis)) +
+  geom_point() +
+  ylab("Alona affinis ind/L 2016")
+env_alona_a
+
+env_alona_r <- ggplot(environment2016_ind, aes(week(Datum), Alona.rectangula)) +
+  geom_point() +
+  ylab("Alona rectangula ind/L 2016")
+env_alona_r
+
+env_chydorus <- ggplot(environment2016_ind, aes(week(Datum), Chydorus.sphaericus)) +
+  geom_point() +
+  ylab("Chydorus sphaericus ind/L 2016")
+env_chydorus
+
+env_daphnia <- ggplot(environment2016_ind, aes(week(Datum), Daphnia.galeata)) +
+  geom_point() +
+  ylab("Daphnia galeata ind/L 2016")
+env_daphnia 
+
+env_pleuroxus <- ggplot(environment2016_ind, aes(week(Datum), Pleuroxus.aduncus)) +
+  geom_point() +
+  ylab("Pleuroxus aduncus ind/L 2016")
+env_pleuroxus
+
+row_sum <- rowSums(maaginhoud_16[3:16], na.rm = TRUE)
+
+maaginhoud_rel16 <- maaginhoud_16[1:2]
+new_row <- list()
+
+for (count in length(maaginhoud_16$Date.week)) {
+  new_row <- (maaginhoud_16[count,3:16] / row_sum[count])
+  new_row <- insert(new_row, ats = c(0, 1), values = maaginhoud_rel16[count, 1:2])
+  maaginhoud_rel16 <- rbind(maaginhoud_rel16, new_row)
+}
+
+```
+
+## Feeding Preference
+
+Together with the data from Charlottes' bachelor dissertation, feeding preference in 2016 is checked.
+
+```{r pressure, echo=FALSE}
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
